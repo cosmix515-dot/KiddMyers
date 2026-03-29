@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KiddMyers</title>
+<link href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#0ea5e9;
+  --deep:#020617;
+  --mid:#0a1f44;
+}
+*{box-sizing:border-box}
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at 20% 10%, rgba(14,165,233,0.15), transparent 40%),
+              radial-gradient(circle at 80% 20%, rgba(30,58,138,0.2), transparent 40%),
+              linear-gradient(180deg, var(--deep), var(--mid));
+  color: white;
+  overflow-x:hidden;
+}
+header {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding: 60px 20px 20px;
+  position:relative;
+}
+.logo {
+  font-family: 'Rock Salt', cursive;
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #0ea5e9, #1e3a8a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hamburger icon */
+.menu-btn {
+  position:absolute;
+  right:25px;
+  top:45px;
+  cursor:pointer;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width:28px;
+  height:22px;
+}
+.menu-btn div{
+  height:3px;
+  background:white;
+  border-radius:2px;
+  transition: transform 0.4s ease;
+}
+.menu-btn:hover div:nth-child(1) { transform: translateX(-6px); }
+.menu-btn:hover div:nth-child(2) { transform: translateX(6px); }
+.menu-btn:hover div:nth-child(3) { transform: translateX(-6px); }
+
+/* Menu panel */
+.menu-panel{
+  position:fixed;
+  top:0;
+  right:-250px;
+  width:250px;
+  height:100%;
+  background:rgba(2,6,23,0.95);
+  backdrop-filter:blur(10px);
+  padding:60px 20px;
+  transition: right 0.4s ease;
+}
+.menu-panel.active{right:0}
+.menu-panel a{
+  display:block;
+  margin:20px 0;
+  text-decoration:none;
+  color:white;
+  font-size:1.2rem;
+  opacity:0;
+  transform: translateX(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: relative;
+}
+.menu-panel.active a{
+  opacity:1;
+  transform: translateX(0);
+}
+.menu-panel a::after {
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:0%;
+  height:2px;
+  background: #0ea5e9;
+  transition: width 0.3s ease;
+}
+.menu-panel a:hover::after {
+  width:100%;
+}
+
+.hero{
+  text-align:center;
+  padding:80px 20px 40px;
+}
+.hero h1{font-size:3rem;margin-bottom:10px}
+.hero p{opacity:0.8}
+.section{
+  padding:60px 20px;
+  max-width:1000px;
+  margin:auto;
+}
+.section h2{font-size:2rem;margin-bottom:15px}
+.music iframe{
+  width:100%;
+  height:400px;
+  border-radius:12px;
+}
+
+/* Buttons slide animation & text color */
+.socials a, .button-glow {
+  display:inline-block;
+  margin:8px;
+  padding:12px 25px;
+  border-radius:30px;
+  text-decoration:none;
+  color:white;
+  border:1px solid var(--accent);
+  background:black;
+  position:relative;
+  overflow:hidden;
+  transition: transform 0.3s ease;
+}
+.socials a span, .button-glow span {
+  position:relative;
+  z-index:1;
+  transition: color 0.3s ease 0.15s;
+}
+.socials a::before, .button-glow::before {
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:white;
+  z-index:0;
+  transition: all 0.3s ease;
+}
+.socials a:hover::before, .button-glow:hover::before {
+  left:0;
+}
+.button-glow:hover span {
+  color:black;
+}
+
+/* Socials platform gradients */
+.socials a.spotify:hover::before { background: linear-gradient(135deg,#1DB954,#1ED760);}
+.socials a.youtube:hover::before { background: linear-gradient(135deg,#FF0000,#FF4C4C);}
+.socials a.tiktok:hover::before { background: linear-gradient(135deg,#69C9D0,#EE1D52);}
+.socials a.instagram:hover::before { background: linear-gradient(135deg,#F58529,#DD2A7B,#8134AF,#515BD4);}
+.socials a.apple:hover::before { background: linear-gradient(135deg,#ff4848,#ff6f6f);}
+.socials a.soundcloud:hover::before { background: linear-gradient(135deg,#FF5500,#FFAA00);}
+
+.socials a:hover, .button-glow:hover {
+  transform: translateY(-5px);
+}
+
+.latest-box{
+  text-align:center;
+}
+.latest-box img{
+  width:220px;
+  border-radius:15px;
+  margin:20px 0;
+}
+.page{display:none}
+.page.active{display:block; animation: fadeIn 0.4s ease;}
+@keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+}
+button.submit {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  padding: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition:0.3s;
+}
+button.submit:hover{transform:scale(1.05)}
+.footer{
+  text-align:center;
+  padding:40px 20px;
+  opacity:0.6;
+}
+
+/* News Box */
+#news-search{
+  width:100%;
+  max-width:300px;
+  padding:8px 12px;
+  border-radius:30px;
+  border:none;
+  margin-bottom:20px;
+  display:block;
+  background: rgba(14,165,233,0.1);
+  color:white;
+  font-size:1rem;
+}
+#news-search::placeholder{
+  color: rgba(255,255,255,0.6);
+}
+.news-container {
+  display:flex;
+  flex-wrap: wrap;
+  gap:20px;
+}
+.news-box{
+  width:480px;
+  border-radius:12px;
+  overflow:hidden;
+  background:#111;
+  position:relative;
+}
+.news-header{
+  position:relative;
+  width:100%;
+  height:150px;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.news-header h3{
+  position:absolute;
+  color:white;
+  font-size:1.5rem;
+  text-align:center;
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  padding:0 10px;
+}
+.news-content{
+  padding:15px;
+  font-size:0.95rem;
+  line-height:1.4;
+  color:white;
+  max-height:80px;
+  overflow:hidden;
+  position:relative;
+}
+.read-more-btn{
+  display:none;
+  margin:10px auto;
+  padding:6px 15px;
+  background: var(--accent);
+  border-radius:15px;
+  cursor:pointer;
+  width:max-content;
+  text-align:center;
+}
+
+/* Fullscreen overlay */
+#news-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.95);
+  display:none;
+  z-index:999;
+  overflow-y:auto;
+}
+#news-overlay .overlay-content{
+  max-width:800px;
+  margin:50px auto;
+  background:#111;
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+}
+#news-overlay .overlay-header{
+  position:relative;
+  width:100%;
+  height:250px;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#news-overlay .overlay-header h3{
+  color:white;
+  font-size:2rem;
+  text-align:center;
+  text-shadow:0 0 10px rgba(0,0,0,0.8);
+  padding:0 10px;
+}
+#news-overlay .overlay-content-text{
+  padding:20px;
+  font-size:1rem;
+  color:white;
+  line-height:1.5;
+}
+#news-overlay .close-btn{
+  position:absolute;
+  top:15px;
+  right:15px;
+  font-size:1.5rem;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+  z-index:10;
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">KiddMyers</div>
+<div class="menu-btn" id="menu-btn" onclick="toggleMenu()">
+<div></div><div></div><div></div>
+</div>
+</header>
+
+<div class="menu-panel" id="menu">
+<a href="#" onclick="showPage('home')">Home</a>
+<a href="#" onclick="showPage('news')">News</a>
+
+</div>
+
+<div id="home" class="page active">
+<section class="hero">
+<h1>Welcome to the KiddMyers website</h1>
+<p></p>
+</section>
+
+<section class="section">
+<h2>About Me</h2>
+<p>KiddMyers began his music journey in late 2024, first experimenting with a Gorilla Tag inspired track. The song’s title is now unknown, as his original channel, CosmicGT, has since been deleted.
+
+In January 2025, KiddMyers released “Five Dolla’s Ft. CxRxT,” marking his first real step into the music scene. The track was initially uploaded to an account called CosmixMusic before being reuploaded to a newer channel. Known for its explicit and comedic tone, KiddMyers even clarified at the end of the song that it was meant as a troll.
+
+After this release, he took a step back from music for most of 2025. He returned on November 15th, 2025, with “Five Dolla’s Ft. CxRxT (Part 2)” on his second channel, More Cosmix. Continuing the series, he dropped “Five Dolla’s Ft. CxRxT (Part 3)” on January 30th, 2026, around the anniversary of the original track. Although initially intended to be the final installment, KiddMyers later decided to continue the series, finding the creative process enjoyable alongside Stojinator.
+
+In early 2026, KiddMyers made the decision to take music more seriously, releasing his official debut track, “Pop It.” Looking ahead, he’s expressed strong excitement for future releases, calling this moment “the start of something big.”</p>
+</section>
+
+<section class="section music">
+<h2>Music</h2>
+<iframe src="https://open.spotify.com/embed/artist/62ww5zTG2oGk9qoKKdoMQO?utm_source=generator" style="border-radius:12px" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+</section>
+
+<section class="section socials">
+<h2>Socials</h2>
+<a href="https://open.spotify.com/artist/62ww5zTG2oGk9qoKKdoMQO?si=uwIHoDh9SYGmqbYLUd7zJA" target="_blank" class="spotify"><span>Spotify</span></a>
+<a href="https://www.youtube.com/@OfficialKiddMyers" target="_blank" class="youtube"><span>YouTube</span></a>
+<a href="https://www.tiktok.com/@kiddmyerss" target="_blank" class="tiktok"><span>TikTok</span></a>
+<a href="https://www.instagram.com/kiddmyers/" target="_blank" class="instagram"><span>Instagram</span></a>
+<a href="https://music.apple.com/us/artist/kiddmyers/1885995590" target="_blank" class="apple"><span>Apple Music</span></a>
+<a href="https://soundcloud.com/kiddmyers" target="_blank" class="soundcloud"><span>SoundCloud</span></a>
+</section>
+
+<section class="section">
+<h2>Latest Releases</h2>
+<div class="latest-box">
+<img src="https://pbs.twimg.com/media/HEgl0dyWkAAUeJ2?format=jpg&name=small" alt="Latest Song Cover">
+<p>Ca$h</p>
+<a href="https://open.spotify.com/album/27rJmkz62SyMcNW4oJuNmf?si=artCVLWkTda7lypc1uN7bg" target="_blank" class="button-glow"><span>Listen Now</span></a>
+</div>
+</section>
+</div>
+
+<div id="news" class="page">
+<section class="section">
+<h2>News</h2>
+<input type="text" id="news-search" placeholder="Search news...">
+<div class="news-container">
+  <div class="news-box">
+    <div class="news-header" style="background-image:url('https://pbs.twimg.com/media/HEgl0dyWkAAUeJ2?format=jpg');">
+      <h3>New song out now!</h3>
+    </div>
+    <div class="news-content">
+      <p>New song called "Ca$h" out now on all platforms!</p>
+      <div class="read-more-btn">Read More</div>
+    </div>
+  </div>
+  <div class="news-box">
+    <div class="news-header" style="background-image:url('https://pbs.twimg.com/profile_banners/2031462763953008643/1773853934/1500x500');">
+      <h3>Welcome to the KiddMyers website!</h3>
+    </div>
+    <div class="news-content">
+      <p>Welcome to website for rapper, KiddMyers! on here, you will find all links to KiddMyers's socials, newest releases & more!</p>
+      <div class="read-more-btn">Read More</div>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+
+<div id="news-overlay">
+  <div class="overlay-content">
+    <div class="close-btn">X</div>
+    <div class="overlay-header">
+      <h3></h3>
+    </div>
+    <div class="overlay-content-text"></div>
+  </div>
+</div>
+
+<div class="footer">© KiddMyers</div>
+
+<script>
+function toggleMenu(){
+  document.getElementById('menu').classList.toggle('active');
+}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  toggleMenu();
+}
+function sendEmail(e){
+  e.preventDefault();
+  alert('Hook this up to EmailJS or backend');
+}
+
+// News search filter
+const newsSearch = document.getElementById('news-search');
+newsSearch.addEventListener('input', function(){
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll('#news .news-box').forEach(box=>{
+    const title = box.querySelector('.news-header h3').innerText.toLowerCase();
+    const content = box.querySelector('.news-content p').innerText.toLowerCase();
+    box.style.display=(title.includes(filter) || content.includes(filter))?'block':'none';
+  });
+});
+
+// Show Read More button & overlay functionality
+document.querySelectorAll('.news-box').forEach(box=>{
+  const content = box.querySelector('.news-content p');
+  const btn = box.querySelector('.read-more-btn');
+  if(content.scrollHeight > content.clientHeight){
+    btn.style.display='block';
+  } else {
+    btn.style.display='none';
+  }
+  btn.addEventListener('click', ()=>{
+    const overlay = document.getElementById('news-overlay');
+    const headerImg = box.querySelector('.news-header').style.backgroundImage;
+    const headerText = box.querySelector('.news-header h3').innerText;
+    const contentText = content.innerText;
+
+    overlay.style.display='block';
+    overlay.querySelector('.overlay-header').style.backgroundImage = headerImg;
+    overlay.querySelector('.overlay-header h3').innerText = headerText;
+    overlay.querySelector('.overlay-content-text').innerText = contentText;
+  });
+});
+
+// Close overlay
+document.querySelector('#news-overlay .close-btn').addEventListener('click', ()=>{
+  document.getElementById('news-overlay').style.display='none';
+});
+</script>
+
+</body>
+</html>
